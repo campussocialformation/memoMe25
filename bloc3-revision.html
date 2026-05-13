@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bloc 3 – Capsule de révision | Formation Moniteur Éducateur</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bd:#1e3a5f;--bm:#2d6a9f;--bl:#e8f0fe;
+  --teal:#0e9aa7;--teal-l:#e0f5f7;
+  --green:#2e7d32;--green-l:#e8f5e9;
+  --red:#c62828;--red-l:#ffebee;
+  --ora:#e65100;--ora-l:#fff3e0;
+  --g1:#f5f7fa;--g2:#e8ecef;--g3:#b0bec5;--g4:#607d8b;--g5:#37474f;
+  --txt:#1a2332;--wh:#fff;
+  --sh:0 4px 16px rgba(0,0,0,.10);--sh-lg:0 8px 32px rgba(0,0,0,.14);
+  --r:12px;--rs:8px;--tr:.22s ease
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:var(--g1);color:var(--txt);min-height:100vh;line-height:1.5}
+
+/* ── SCREENS ── */
+.screen{display:none}
+.screen.active{display:flex;flex-direction:column;min-height:100vh}
+
+/* ── WELCOME ── */
+#sw{align-items:center;justify-content:center;padding:24px;
+  background:linear-gradient(160deg,var(--bd) 0%,#2d4a7a 50%,var(--teal) 100%)}
+.wc{background:var(--wh);border-radius:20px;padding:48px 40px;max-width:480px;width:100%;box-shadow:var(--sh-lg);text-align:center}
+.badge{display:inline-block;background:var(--bl);color:var(--bm);font-size:.75rem;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;padding:6px 14px;border-radius:99px;margin-bottom:20px}
+.wc h1{font-size:1.7rem;font-weight:800;color:var(--bd);margin-bottom:10px;line-height:1.25}
+.wc .sub{color:var(--g4);font-size:.95rem;margin-bottom:32px}
+.stats{display:flex;justify-content:center;gap:24px;margin-bottom:32px;
+  padding:16px;background:var(--g1);border-radius:var(--r)}
+.stat .v{font-size:1.6rem;font-weight:800;color:var(--bd)}
+.stat .l{font-size:.72rem;color:var(--g4);text-transform:uppercase;letter-spacing:.5px}
+.ig{text-align:left;margin-bottom:24px}
+.ig label{display:block;font-size:.9rem;font-weight:600;color:var(--g5);margin-bottom:8px}
+.ig input{width:100%;padding:14px 18px;border:2px solid var(--g2);border-radius:var(--rs);
+  font-size:1rem;color:var(--txt);transition:border-color var(--tr);outline:none}
+.ig input:focus{border-color:var(--teal)}
+.ig input::placeholder{color:var(--g3)}
+.btn-p{width:100%;padding:15px;background:linear-gradient(135deg,var(--bd),var(--bm));
+  color:var(--wh);border:none;border-radius:var(--rs);font-size:1rem;font-weight:700;
+  cursor:pointer;transition:all var(--tr)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(30,58,95,.35)}
+.btn-p:disabled{background:var(--g3);cursor:not-allowed;transform:none;box-shadow:none}
+
+/* ── PROGRESS BAR ── */
+.ph{position:sticky;top:0;z-index:100;background:var(--bd);padding:12px 20px;
+  display:flex;align-items:center;gap:12px;color:var(--wh)}
+.pbw{flex:1;background:rgba(255,255,255,.2);border-radius:99px;height:10px;overflow:hidden}
+.pbf{height:100%;background:linear-gradient(90deg,var(--teal),#4ecca3);border-radius:99px;
+  transition:width .5s cubic-bezier(.4,0,.2,1)}
+.plbl{font-size:.85rem;font-weight:700;white-space:nowrap}
+.pname{font-size:.8rem;opacity:.75;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis}
+
+/* ── QUIZ ── */
+#sq{background:var(--g1)}
+.qc{flex:1;padding:24px 20px;max-width:720px;margin:0 auto;width:100%}
+.theme-badge{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.8px;padding:5px 12px;border-radius:99px;margin-bottom:12px}
+.t-loi{background:#ede7f6;color:#5e35b1}
+.t-handicap{background:#fce4ec;color:#c62828}
+.t-protection{background:#e3f2fd;color:#1565c0}
+.t-insertion{background:#e8f5e9;color:#2e7d32}
+.t-transversal{background:#fff8e1;color:#e65100}
+.ac{background:var(--wh);border-radius:var(--r);padding:28px 24px;box-shadow:var(--sh);margin-bottom:16px}
+.anum{font-size:.8rem;color:var(--g4);font-weight:600;margin-bottom:10px}
+.aq{font-size:1.05rem;font-weight:600;color:var(--txt);margin-bottom:20px;line-height:1.5}
+
+/* QCM */
+.ol{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.ob{display:flex;align-items:center;gap:12px;padding:14px 16px;border:2px solid var(--g2);
+  border-radius:var(--rs);background:var(--wh);cursor:pointer;text-align:left;
+  font-size:.95rem;color:var(--txt);transition:all var(--tr);width:100%}
+.ob:hover:not(:disabled){border-color:var(--bm);background:var(--bl)}
+.ob.sel{border-color:var(--bm);background:var(--bl);color:var(--bd)}
+.ob.ok{border-color:var(--green);background:var(--green-l);color:var(--green)}
+.ob.ko{border-color:var(--red);background:var(--red-l);color:var(--red)}
+.ob.show-ok{border-color:var(--green);background:var(--green-l);color:var(--green)}
+.ob:disabled{cursor:default}
+.olet{width:30px;height:30px;border-radius:50%;background:var(--g2);display:flex;
+  align-items:center;justify-content:center;font-weight:700;font-size:.82rem;flex-shrink:0;transition:all var(--tr)}
+.ob.sel .olet{background:var(--bm);color:var(--wh)}
+.ob.ok .olet{background:var(--green);color:var(--wh)}
+.ob.ko .olet{background:var(--red);color:var(--wh)}
+.ob.show-ok .olet{background:var(--green);color:var(--wh)}
+
+/* VF */
+.vfb{display:flex;gap:12px;margin-bottom:20px}
+.vf{flex:1;padding:18px;border:2px solid var(--g2);border-radius:var(--rs);
+  background:var(--wh);cursor:pointer;font-size:1.1rem;font-weight:700;
+  transition:all var(--tr);color:var(--g5)}
+.vf:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.vf.vr:hover:not(:disabled){border-color:var(--green);background:var(--green-l);color:var(--green)}
+.vf.fa:hover:not(:disabled){border-color:var(--red);background:var(--red-l);color:var(--red)}
+.vf.svr{border-color:var(--green);background:var(--green-l);color:var(--green)}
+.vf.sfa{border-color:var(--red);background:var(--red-l);color:var(--red)}
+.vf.rvr{border-color:var(--green);background:var(--green);color:var(--wh)}
+.vf.rfa{border-color:var(--red);background:var(--red);color:var(--wh)}
+.vf:disabled{cursor:default;transform:none}
+
+/* MATCH */
+.mc{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.mcol{display:flex;flex-direction:column;gap:8px}
+.mi{padding:12px 14px;border:2px solid var(--g2);border-radius:var(--rs);cursor:pointer;
+  font-size:.86rem;font-weight:600;text-align:center;transition:all var(--tr);
+  background:var(--wh);color:var(--txt);min-height:64px;display:flex;
+  align-items:center;justify-content:center;line-height:1.3}
+.mi:hover:not(:disabled):not(.mt){border-color:var(--bm);background:var(--bl)}
+.mi.ms{border-color:var(--bm);background:var(--bl);color:var(--bd);box-shadow:0 0 0 3px rgba(45,106,159,.2)}
+.mi.mt{border-color:var(--green);background:var(--green-l);color:var(--green);cursor:default}
+.mi.mw{border-color:var(--red);background:var(--red-l);color:var(--red)}
+.mi:disabled{cursor:default}
+.minstr{font-size:.85rem;color:var(--g4);margin-bottom:14px;font-style:italic}
+
+/* MULTI */
+.multi-note{font-size:.83rem;background:var(--ora-l);color:var(--ora);
+  padding:8px 12px;border-radius:var(--rs);margin-bottom:14px;font-weight:600}
+.btn-sub{width:100%;padding:14px;background:var(--teal);color:var(--wh);border:none;
+  border-radius:var(--rs);font-size:1rem;font-weight:700;cursor:pointer;transition:all var(--tr);margin-top:16px}
+.btn-sub:hover:not(:disabled){background:#0a8592;transform:translateY(-1px);box-shadow:0 4px 14px rgba(14,154,167,.35)}
+.btn-sub:disabled{background:var(--g3);cursor:not-allowed;transform:none}
+
+/* FEEDBACK */
+.fc{background:var(--wh);border-radius:var(--r);padding:22px 24px;box-shadow:var(--sh);margin-bottom:16px;display:none}
+.fc.vis{display:block;animation:sup .3s ease}
+@keyframes sup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.fr{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.fi{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:1.1rem;flex-shrink:0}
+.fi.ok{background:var(--green)}
+.fi.ko{background:var(--red)}
+.ft{font-size:1rem;font-weight:700}
+.ft.ok{color:var(--green)}
+.ft.ko{color:var(--red)}
+.fe{font-size:.9rem;color:var(--g5);line-height:1.55;padding:12px 14px;
+  background:var(--g1);border-radius:var(--rs);border-left:4px solid var(--g3);margin-bottom:16px}
+.btn-nx{width:100%;padding:14px;background:var(--bd);color:var(--wh);border:none;
+  border-radius:var(--rs);font-size:1rem;font-weight:700;cursor:pointer;
+  transition:all var(--tr);display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-nx:hover{background:#152d4d;transform:translateY(-1px);box-shadow:0 4px 14px rgba(30,58,95,.3)}
+
+/* ── SCORE ── */
+#ss{align-items:center;justify-content:center;padding:24px;
+  background:linear-gradient(160deg,var(--bd) 0%,#2d4a7a 50%,var(--teal) 100%)}
+.scard{background:var(--wh);border-radius:20px;padding:48px 40px;max-width:500px;
+  width:100%;box-shadow:var(--sh-lg);text-align:center}
+.scircle{width:130px;height:130px;border-radius:50%;
+  background:linear-gradient(135deg,var(--teal),#4ecca3);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 24px;
+  box-shadow:0 8px 24px rgba(14,154,167,.35)}
+.snum{font-size:2.2rem;font-weight:800;color:var(--wh)}
+.scard h2{font-size:1.5rem;font-weight:800;color:var(--bd);margin-bottom:8px}
+.scard p{color:var(--g4);margin-bottom:28px;line-height:1.5}
+.btn-cert{width:100%;padding:15px;
+  background:linear-gradient(135deg,#f9a825,#e65100);color:var(--wh);
+  border:none;border-radius:var(--rs);font-size:1rem;font-weight:700;
+  cursor:pointer;transition:all var(--tr);margin-bottom:12px}
+.btn-cert:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(230,81,0,.4)}
+.btn-rst{width:100%;padding:13px;background:transparent;color:var(--bd);
+  border:2px solid var(--bd);border-radius:var(--rs);font-size:.95rem;
+  font-weight:600;cursor:pointer;transition:all var(--tr)}
+.btn-rst:hover{background:var(--bl)}
+
+/* ── CERTIFICATE ── */
+#sc{align-items:center;justify-content:flex-start;padding:24px;background:var(--g1)}
+.cw{max-width:760px;width:100%}
+.cact{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.btn-back{flex:1;padding:13px;background:transparent;color:var(--g5);
+  border:2px solid var(--g3);border-radius:var(--rs);font-size:.9rem;font-weight:600;
+  cursor:pointer;min-width:100px;transition:all var(--tr)}
+.btn-back:hover{border-color:var(--g5)}
+.btn-print{flex:1;padding:13px;background:var(--bd);color:var(--wh);border:none;
+  border-radius:var(--rs);font-size:.9rem;font-weight:700;cursor:pointer;min-width:120px;transition:all var(--tr)}
+.btn-print:hover{background:#152d4d;transform:translateY(-1px)}
+.btn-dl{flex:1;padding:13px;background:var(--teal);color:var(--wh);border:none;
+  border-radius:var(--rs);font-size:.9rem;font-weight:700;cursor:pointer;min-width:120px;transition:all var(--tr)}
+.btn-dl:hover{background:#0a8592;transform:translateY(-1px)}
+#certCanvas{width:100%;height:auto;border-radius:var(--r);box-shadow:var(--sh-lg);display:block}
+
+@media print{
+  body>*:not(#sc){display:none!important}
+  #sc{display:flex!important;background:var(--wh);padding:0}
+  .cact{display:none!important}
+  #certCanvas{box-shadow:none;border-radius:0}
+}
+@media(max-width:520px){
+  .wc,.scard{padding:32px 18px}
+  .ac,.fc{padding:20px 16px}
+  .mc{gap:6px}
+  .mi{font-size:.78rem;padding:10px 8px}
+  .wc h1{font-size:1.4rem}
+  .vfb{flex-direction:column}
+  .stats{gap:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ WELCOME ═══ -->
+<div id="sw" class="screen active">
+  <div class="wc">
+    <div class="badge">Formation Moniteur Éducateur</div>
+    <h1>Capsule de révision<br>Bloc 3</h1>
+    <p class="sub">Opérateurs du secteur social et médico-social — structures, missions, lois</p>
+    <div class="stats">
+      <div class="stat"><div class="v">20</div><div class="l">Activités</div></div>
+      <div class="stat"><div class="v">4</div><div class="l">Types</div></div>
+      <div class="stat"><div class="v">~25'</div><div class="l">Durée</div></div>
+    </div>
+    <div class="ig">
+      <label for="fn">Votre prénom :</label>
+      <input type="text" id="fn" placeholder="Ex : Sophie" maxlength="40" autocomplete="given-name">
+    </div>
+    <button class="btn-p" id="btn-go" onclick="startQuiz()" disabled>Commencer la révision →</button>
+  </div>
+</div>
+
+<!-- ═══ QUIZ ═══ -->
+<div id="sq" class="screen">
+  <div class="ph">
+    <span class="pname" id="pname">Étudiant·e</span>
+    <div class="pbw"><div class="pbf" id="pb" style="width:0%"></div></div>
+    <span class="plbl" id="ppct">0 %</span>
+  </div>
+  <div class="qc">
+    <div id="act"></div>
+    <div class="fc" id="fc">
+      <div class="fr">
+        <div class="fi" id="fi"></div>
+        <div class="ft" id="ft"></div>
+      </div>
+      <div class="fe" id="fe"></div>
+      <button class="btn-nx" id="btn-nx" onclick="nextAct()">Activité suivante →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCORE ═══ -->
+<div id="ss" class="screen">
+  <div class="scard">
+    <div class="scircle"><span class="snum" id="sdisplay">0/20</span></div>
+    <h2 id="stitle">Félicitations !</h2>
+    <p id="ssub"></p>
+    <button class="btn-cert" onclick="showCert()">🎓 Générer mon certificat</button>
+    <button class="btn-rst" onclick="restartQuiz()">↺ Recommencer depuis le début</button>
+  </div>
+</div>
+
+<!-- ═══ CERTIFICATE ═══ -->
+<div id="sc" class="screen">
+  <div class="cw">
+    <div class="cact">
+      <button class="btn-back" onclick="showScreen('ss')">← Retour</button>
+      <button class="btn-print" onclick="window.print()">🖨️ Imprimer</button>
+      <button class="btn-dl" onclick="dlCert()">⬇️ Télécharger</button>
+    </div>
+    <canvas id="certCanvas"></canvas>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════
+const A = [
+  // 1 ─ QCM ─ Loi 2002-2
+  { id:1, type:'qcm', theme:'loi', tl:'Cadre législatif',
+    q:"La loi n° 2002-2 du 2 janvier 2002 a pour objet principal de :",
+    opts:["Créer les maisons d'accueil spécialisées (MAS)",
+          "Rénover l'action sociale et médico-sociale",
+          "Instituer le droit au logement opposable",
+          "Réformer la protection de l'enfance"],
+    ok:1,
+    expl:"La loi 2002-2 est la loi transversale de référence du secteur. Elle rénove l'action sociale et médico-sociale, affirme les droits des usagers et impose aux établissements de produire des outils : livret d'accueil, contrat de séjour, projet d'établissement, règlement de fonctionnement, conseil de la vie sociale."
+  },
+  // 2 ─ VF ─ IME
+  { id:2, type:'vf', theme:'handicap', tl:'Secteur Handicap',
+    q:"L'IME (Institut Médico-Éducatif) accueille uniquement des enfants présentant des déficiences motrices.",
+    ok:false,
+    expl:"FAUX. L'IME accueille des enfants et adolescents présentant une déficience intellectuelle, avec ou sans troubles associés. Ce sont les IEM (Instituts d'Éducation Motrice) qui prennent en charge les déficiences motrices."
+  },
+  // 3 ─ MATCH ─ Sigles handicap enfant
+  { id:3, type:'match', theme:'handicap', tl:'Secteur Handicap',
+    q:"Associez chaque sigle à la description qui lui correspond.",
+    pairs:[
+      {l:"IME",  r:"Déficience intellectuelle — enfants & ados"},
+      {l:"ITEP", r:"Troubles du comportement & difficultés psychologiques"},
+      {l:"SESSAD",r:"Accompagnement en milieu de vie ordinaire"},
+      {l:"CAMSP", r:"Dépistage et rééducation précoce (0-6 ans)"}
+    ],
+    expl:"Ces quatre structures constituent le cœur du secteur handicap enfant. Le SESSAD est la seule structure ambulatoire du groupe : il n'assure pas d'hébergement mais suit l'enfant dans son environnement habituel (domicile, école)."
+  },
+  // 4 ─ QCM ─ SESSAD
+  { id:4, type:'qcm', theme:'handicap', tl:'Secteur Handicap',
+    q:"Le SESSAD (Service d'Éducation Spéciale et de Soins à Domicile) se distingue des autres structures du secteur handicap enfant car il :",
+    opts:["Propose un hébergement permanent pour les enfants",
+          "Accompagne les enfants dans leur milieu de vie ordinaire",
+          "Accueille uniquement des enfants présentant des troubles moteurs",
+          "Relève exclusivement du secteur sanitaire"],
+    ok:1,
+    expl:"Le SESSAD est un service ambulatoire : l'enfant reste chez lui et à l'école. Des professionnels se déplacent pour l'accompagner dans ces milieux. C'est une alternative au placement en établissement spécialisé."
+  },
+  // 5 ─ MULTI ─ Hébergement handicap adulte
+  { id:5, type:'multi', theme:'handicap', tl:'Secteur Handicap',
+    q:"Parmi les structures suivantes, lesquelles proposent un hébergement dans le secteur handicap adulte ?",
+    opts:["MAS – Maison d'Accueil Spécialisée",
+          "SAVS – Service d'Accompagnement à la Vie Sociale",
+          "Foyer de Vie (EANM)",
+          "ESAT – Établissement et Service d'Aide par le Travail",
+          "FAM – Foyer d'Accueil Médicalisé"],
+    ok:[0,2,4],
+    expl:"La MAS, le FAM (tous deux EAM) et le Foyer de Vie (EANM) proposent un hébergement. Le SAVS est un service ambulatoire d'accompagnement à la vie sociale, et l'ESAT est un lieu de travail adapté sans hébergement."
+  },
+  // 6 ─ MATCH ─ Loi ↔ Secteur
+  { id:6, type:'match', theme:'loi', tl:'Cadre législatif',
+    q:"Associez chaque loi à son secteur d'application principal.",
+    pairs:[
+      {l:"Loi 2005-102",       r:"Handicap"},
+      {l:"Loi 2007-293",       r:"Protection de l'enfance"},
+      {l:"Loi 98-657",         r:"Exclusion / Insertion"},
+      {l:"Loi 2007-290 (DALO)",r:"Droit au logement"}
+    ],
+    expl:"Chaque secteur est structuré par une loi fondatrice. La loi 2005-102 porte sur l'égalité des droits pour les personnes handicapées ; la loi 2007-293 réforme la protection de l'enfance ; la loi 98-657 lutte contre les exclusions ; la loi DALO crée le droit au logement opposable."
+  },
+  // 7 ─ VF ─ AEMO
+  { id:7, type:'vf', theme:'protection', tl:"Protection de l'enfance",
+    q:"L'AEMO (Action Éducative en Milieu Ouvert) est une mesure administrative qui maintient l'enfant dans son milieu familial.",
+    ok:false,
+    expl:"FAUX. L'AEMO est une mesure JUDICIAIRE, ordonnée par le juge des enfants. La mesure administrative équivalente s'appelle l'AED (Action Éducative à Domicile), décidée par le conseil départemental avec l'accord de la famille."
+  },
+  // 8 ─ QCM ─ Loi la plus récente
+  { id:8, type:'qcm', theme:'loi', tl:'Cadre législatif',
+    q:"Quelle est la loi la plus récente relative à la protection des enfants ?",
+    opts:["Loi 2007-293 du 5 mars 2007 réformant la protection de l'enfance",
+          "Loi 2016-297 du 14 mars 2016 relative à la protection de l'enfant",
+          "Loi 2022-140 du 7 février 2022 dite « loi Taquet »",
+          "Loi 2002-305 du 4 mars 2002 relative à l'autorité parentale"],
+    ok:2,
+    expl:"La loi Taquet (n°2022-140) est la plus récente. Elle renforce la protection des enfants : interdiction de placer les moins de 3 ans à l'hôtel, amélioration des sorties de l'ASE pour les jeunes majeurs, renforcement du contrôle des établissements."
+  },
+  // 9 ─ MATCH ─ Insertion ↔ Public
+  { id:9, type:'match', theme:'insertion', tl:'Insertion',
+    q:"Associez chaque structure à son public prioritaire.",
+    pairs:[
+      {l:"Mission Locale",r:"Jeunes 16-25 ans"},
+      {l:"CHRS",          r:"Adultes en situation d'exclusion"},
+      {l:"EPIDE",         r:"Jeunes en difficulté (internat d'excellence)"},
+      {l:"CHU",           r:"Personnes en détresse (urgence)"}
+    ],
+    expl:"Mission Locale et EPIDE ciblent les jeunes. Le CHRS propose un hébergement long avec accompagnement vers l'insertion. Le CHU est une réponse d'urgence inconditionnelle et temporaire pour toute personne en détresse."
+  },
+  // 10 ─ VF ─ MAS/FAM = EAM
+  { id:10, type:'vf', theme:'handicap', tl:'Secteur Handicap',
+    q:"La MAS (Maison d'Accueil Spécialisée) et le FAM (Foyer d'Accueil Médicalisé) sont tous deux classés comme EAM (Établissement d'Accueil Médicalisé).",
+    ok:true,
+    expl:"VRAI. Suite à la réforme de la nomenclature, MAS et FAM sont regroupés sous la catégorie EAM (médicalisé). Le Foyer de Vie et le Foyer d'Hébergement relèvent de la catégorie EANM (Établissement d'Accueil Non Médicalisé)."
+  },
+  // 11 ─ QCM ─ Loi 2002-2, livret d'accueil
+  { id:11, type:'qcm', theme:'loi', tl:'Cadre législatif',
+    q:"Parmi les outils créés par la loi 2002-2, lequel est remis personnellement à chaque usager à son arrivée dans l'établissement ?",
+    opts:["Le projet d'établissement",
+          "Le livret d'accueil",
+          "Le règlement de fonctionnement",
+          "Le conseil de la vie sociale"],
+    ok:1,
+    expl:"Le livret d'accueil est remis individuellement à chaque usager dès son admission. Il présente l'établissement, ses missions, les droits de l'usager et les contacts utiles. Les autres outils (projet d'établissement, règlement de fonctionnement) sont des documents institutionnels consultables."
+  },
+  // 12 ─ MATCH ─ Handicap adulte ↔ mission
+  { id:12, type:'match', theme:'handicap', tl:'Secteur Handicap',
+    q:"Associez chaque structure du secteur handicap adulte à sa mission principale.",
+    pairs:[
+      {l:"ESAT",          r:"Travail adapté & soutien médico-social"},
+      {l:"SAVS",          r:"Accompagnement à la vie sociale"},
+      {l:"SAMSAH",        r:"Accompagnement médico-social avec soins"},
+      {l:"Foyer de Vie",  r:"Hébergement, pas d'activité professionnelle"}
+    ],
+    expl:"L'ESAT permet aux travailleurs handicapés d'exercer une activité. SAVS et SAMSAH sont ambulatoires ; la différence est que le SAMSAH intègre un volet de soins. Le Foyer de Vie héberge des personnes trop handicapées pour travailler mais sans nécessiter de soins constants."
+  },
+  // 13 ─ QCM ─ CSAPA
+  { id:13, type:'qcm', theme:'handicap', tl:'Addictologie / Santé mentale',
+    q:"Le CSAPA (Centre de Soins, d'Accompagnement et de Prévention en Addictologie) a pour mission principale de :",
+    opts:["Héberger les personnes sans domicile présentant des addictions",
+          "Assurer des soins ambulatoires et accompagner les personnes en difficulté avec les addictions",
+          "Coordonner l'offre d'insertion pour les jeunes usagers de drogues",
+          "Prendre en charge les enfants présentant des troubles du comportement liés aux addictions"],
+    ok:1,
+    expl:"Le CSAPA est un service ambulatoire spécialisé en addictologie. Il propose des consultations, des soins, du suivi et de la prévention. Il se distingue du CAARUD, qui assure la réduction des risques pour des usagers actifs sans exiger un projet de soins."
+  },
+  // 14 ─ VF ─ Loi 1975
+  { id:14, type:'vf', theme:'loi', tl:'Cadre législatif',
+    q:"La loi du 30 juin 1975 (n°75-534) est la première loi fondatrice du secteur du handicap en France.",
+    ok:true,
+    expl:"VRAI. La loi d'orientation du 30 juin 1975 est la loi fondatrice du secteur handicap. Elle a posé les bases du droit à la compensation et à l'intégration. La loi du 11 février 2005 (égalité des droits et des chances) l'a ensuite profondément renforcée."
+  },
+  // 15 ─ MULTI ─ Structures de placement
+  { id:15, type:'multi', theme:'protection', tl:"Protection de l'enfance",
+    q:"Quelles structures relèvent du placement dans le secteur de la protection de l'enfance ?",
+    opts:["MECS – Maison d'Enfants à Caractère Social",
+          "AEMO – Action Éducative en Milieu Ouvert",
+          "Foyer de l'Enfance",
+          "AED – Action Éducative à Domicile",
+          "Service de Placement Familial"],
+    ok:[0,2,4],
+    expl:"MECS, Foyer de l'Enfance et Service de Placement Familial retirent l'enfant de son milieu familial (placement). L'AEMO et l'AED sont des mesures de milieu ouvert : l'enfant reste chez lui avec un accompagnement éducatif renforcé."
+  },
+  // 16 ─ QCM ─ Loi DALO
+  { id:16, type:'qcm', theme:'loi', tl:'Cadre législatif',
+    q:"La loi DALO (n°2007-290 du 5 mars 2007) instaure principalement :",
+    opts:["La création des CHRS (Centres d'Hébergement et de Réinsertion Sociale)",
+          "Le droit au logement opposable",
+          "La réforme de l'autorité parentale",
+          "L'égalité des droits pour les personnes handicapées"],
+    ok:1,
+    expl:"La loi DALO (Droit Au Logement Opposable) permet à toute personne sans logement ou mal logée de faire valoir ce droit devant une commission de médiation, puis devant le tribunal administratif si nécessaire. C'est une loi clé du secteur insertion/exclusion."
+  },
+  // 17 ─ MATCH ─ Structures ↔ secteur
+  { id:17, type:'match', theme:'transversal', tl:'Transversal',
+    q:"Associez chaque structure à son secteur d'intervention.",
+    pairs:[
+      {l:"Prévention spécialisée",r:"Protection de l'enfance"},
+      {l:"CAARUD",                r:"Addictologie"},
+      {l:"FJT",                   r:"Insertion jeunes"},
+      {l:"CMP",                   r:"Santé mentale"}
+    ],
+    expl:"La prévention spécialisée travaille auprès des jeunes en voie de marginalisation. Le CAARUD assure la réduction des risques pour usagers de drogues. Le FJT (Foyer de Jeunes Travailleurs) héberge des jeunes en insertion professionnelle. Le CMP propose des consultations ambulatoires en psychiatrie."
+  },
+  // 18 ─ VF ─ Loi autorité parentale
+  { id:18, type:'vf', theme:'loi', tl:'Cadre législatif',
+    q:"La loi du 4 mars 2002 (n°2002-305) relative à l'autorité parentale s'applique exclusivement aux situations de placement judiciaire.",
+    ok:false,
+    expl:"FAUX. La loi 2002-305 a une portée générale : elle réaffirme la coparentalité (exercice conjoint de l'autorité parentale même après séparation) et les droits de l'enfant dans toutes les situations familiales, bien au-delà des seules situations de placement judiciaire."
+  },
+  // 19 ─ QCM ─ SIAO
+  { id:19, type:'qcm', theme:'insertion', tl:'Insertion',
+    q:"Quelle est la mission principale du SIAO (Service Intégré d'Accueil et d'Orientation) ?",
+    opts:["Accueillir directement en urgence les personnes sans domicile",
+          "Coordonner l'offre d'hébergement et de logement sur un territoire",
+          "Accompagner les jeunes de 16 à 25 ans vers l'emploi",
+          "Proposer des consultations en addictologie"],
+    ok:1,
+    expl:"Le SIAO est le dispositif de régulation du parc d'hébergement à l'échelle départementale. Il oriente les personnes vers la solution la plus adaptée (CHU, CHRS, logement adapté…) sans assurer lui-même un hébergement."
+  },
+  // 20 ─ MATCH ─ Lois ↔ Objet
+  { id:20, type:'match', theme:'loi', tl:'Cadre législatif',
+    q:"Associez chaque référence législative à son objet.",
+    pairs:[
+      {l:"Loi 2002-2",          r:"Rénovation de l'action sociale et médico-sociale"},
+      {l:"Loi 2005-102",        r:"Égalité des droits, personnes handicapées"},
+      {l:"Loi Taquet 2022-140", r:"Protection des enfants"},
+      {l:"Loi 98-657",          r:"Lutte contre les exclusions"}
+    ],
+    expl:"Récapitulatif essentiel pour l'examen du Bloc 3 : loi 2002-2 (transversale), loi 2005-102 (handicap), loi Taquet (protection de l'enfance) et loi 98-657 (exclusion) permettent de structurer toute réponse sur le cadre législatif du secteur médico-social."
+  }
+];
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+const SK = 'bloc3_rev_v1';
+let S = { firstName:'', idx:0, score:0, done:[], ms:{} };
+
+// ═══════════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════════
+function init(){
+  const raw = localStorage.getItem(SK);
+  if(raw){
+    try{
+      const p = JSON.parse(raw);
+      if(p && p.firstName){
+        S = {...S, firstName:p.firstName, idx:p.idx||0, score:p.score||0, done:p.done||[]};
+        if(S.idx >= A.length && S.done.length >= A.length){
+          showScreen('ss'); updateScore(); return;
+        }
+        if(S.done.length > 0){
+          showScreen('sq');
+          document.getElementById('pname').textContent = S.firstName;
+          updatePB(); renderAct(S.idx); return;
+        }
+        // Name saved, not started
+        document.getElementById('fn').value = S.firstName;
+        document.getElementById('btn-go').disabled = false;
+      }
+    }catch(e){}
+  }
+  showScreen('sw');
+  setupInput();
+}
+
+function setupInput(){
+  const i = document.getElementById('fn'), b = document.getElementById('btn-go');
+  i.addEventListener('input',()=>{ b.disabled = i.value.trim().length===0; });
+  i.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!b.disabled) startQuiz(); });
+}
+
+function startQuiz(){
+  const n = document.getElementById('fn').value.trim();
+  if(!n) return;
+  S = {firstName:n, idx:0, score:0, done:[], ms:{}};
+  save();
+  document.getElementById('pname').textContent = n;
+  showScreen('sq'); updatePB(); renderAct(0);
+}
+
+// ═══════════════════════════════════════════════════
+// SCREENS
+// ═══════════════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════════════
+function updatePB(){
+  const p = Math.round((S.done.length/A.length)*100);
+  document.getElementById('pb').style.width = p+'%';
+  document.getElementById('ppct').textContent = p+' %';
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════
+function renderAct(i){
+  const act = A[i];
+  document.getElementById('fc').classList.remove('vis');
+  const letters = ['A','B','C','D','E'];
+  let h = `<div class="theme-badge t-${act.theme}">${act.tl}</div>
+    <div class="ac">
+      <div class="anum">Question ${i+1} / ${A.length}</div>
+      <div class="aq">${act.q}</div>`;
+
+  if(act.type==='qcm'){
+    h += `<div class="ol">`;
+    act.opts.forEach((o,j)=>{
+      h += `<button class="ob" onclick="doQCM(this,${j},${act.ok},${act.id})">
+              <span class="olet">${letters[j]}</span><span>${o}</span></button>`;
+    });
+    h += `</div>`;
+  } else if(act.type==='vf'){
+    h += `<div class="vfb">
+      <button class="vf vr" onclick="doVF(this,true,${act.ok})">✓ Vrai</button>
+      <button class="vf fa" onclick="doVF(this,false,${act.ok})">✗ Faux</button>
+    </div>`;
+  } else if(act.type==='match'){
+    const rights = act.pairs.map((p,idx)=>({t:p.r, pi:idx}));
+    shuffle(rights);
+    S.ms[act.id] = {sr:rights, matched:[], selL:null, errors:0};
+    h += `<p class="minstr">Cliquez sur un élément à gauche, puis sur son correspondant à droite.</p>
+      <div class="mc">
+        <div class="mcol" id="ml-${act.id}">`;
+    act.pairs.forEach((p,j)=>{
+      h += `<button class="mi" id="mli-${act.id}-${j}" onclick="selL(${act.id},${j})">${p.l}</button>`;
+    });
+    h += `</div><div class="mcol" id="mr-${act.id}">`;
+    rights.forEach((r,j)=>{
+      h += `<button class="mi" id="mri-${act.id}-${j}" onclick="selR(${act.id},${j})">${r.t}</button>`;
+    });
+    h += `</div></div>`;
+  } else if(act.type==='multi'){
+    S.ms['m'+act.id] = new Set();
+    h += `<div class="multi-note">Plusieurs bonnes réponses — sélectionnez-les toutes puis validez.</div>
+      <div class="ol" id="mol-${act.id}">`;
+    act.opts.forEach((o,j)=>{
+      h += `<button class="ob" id="mo-${act.id}-${j}" onclick="togM(${act.id},${j},this)">
+              <span class="olet">${letters[j]}</span><span>${o}</span></button>`;
+    });
+    h += `</div><button class="btn-sub" id="msub-${act.id}" onclick="subM(${act.id})" disabled>Valider ma sélection</button>`;
+  }
+
+  h += `</div>`;
+  document.getElementById('act').innerHTML = h;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ═══════════════════════════════════════════════════
+// QCM
+// ═══════════════════════════════════════════════════
+function doQCM(btn, chosen, correct, actId){
+  if(btn.disabled) return;
+  const all = btn.closest('.ol').querySelectorAll('.ob');
+  all.forEach(b=>b.disabled=true);
+  const ok = chosen===correct;
+  all.forEach((b,i)=>{
+    if(i===chosen) b.classList.add(ok?'ok':'ko');
+    else if(i===correct&&!ok) b.classList.add('show-ok');
+  });
+  showFeedback(ok, A[S.idx].expl);
+  record(ok);
+}
+
+// ═══════════════════════════════════════════════════
+// VF
+// ═══════════════════════════════════════════════════
+function doVF(btn, chosen, correct){
+  const cont = btn.closest('.vfb');
+  cont.querySelectorAll('.vf').forEach(b=>b.disabled=true);
+  const ok = chosen===correct;
+  cont.querySelectorAll('.vf').forEach(b=>{
+    const isVrai = b.classList.contains('vr');
+    if(isVrai===chosen) b.classList.add(ok?'rvr':'rfa');
+    else if(isVrai===correct) b.classList.add('rvr');
+  });
+  showFeedback(ok, A[S.idx].expl);
+  record(ok);
+}
+
+// ═══════════════════════════════════════════════════
+// MATCH
+// ═══════════════════════════════════════════════════
+function selL(actId, li){
+  const m = S.ms[actId]; if(!m) return;
+  if(m.matched.includes(li)) return;
+  if(m.selL!==null){
+    const prev = document.getElementById(`mli-${actId}-${m.selL}`);
+    if(prev) prev.classList.remove('ms');
+  }
+  m.selL = li;
+  const el = document.getElementById(`mli-${actId}-${li}`);
+  if(el) el.classList.add('ms');
+}
+
+function selR(actId, ri){
+  const m = S.ms[actId]; if(!m||m.selL===null) return;
+  const li = m.selL;
+  const correctPi = li;
+  const gotPi = m.sr[ri].pi;
+  const lel = document.getElementById(`mli-${actId}-${li}`);
+  const rel = document.getElementById(`mri-${actId}-${ri}`);
+  if(correctPi===gotPi){
+    if(lel){lel.classList.remove('ms');lel.classList.add('mt');lel.disabled=true;}
+    if(rel){rel.classList.add('mt');rel.disabled=true;}
+    m.matched.push(li); m.selL=null;
+    if(m.matched.length===A[S.idx].pairs.length){
+      const ok = m.errors===0;
+      showFeedback(ok, A[S.idx].expl);
+      record(ok);
+    }
+  } else {
+    m.errors++;
+    if(lel) lel.classList.add('mw');
+    if(rel) rel.classList.add('mw');
+    setTimeout(()=>{
+      if(lel){lel.classList.remove('mw','ms');}
+      if(rel) rel.classList.remove('mw');
+      m.selL=null;
+    },650);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// MULTI
+// ═══════════════════════════════════════════════════
+function togM(actId, j, btn){
+  if(btn.disabled) return;
+  const sel = S.ms['m'+actId];
+  if(sel.has(j)){sel.delete(j);btn.classList.remove('sel');}
+  else{sel.add(j);btn.classList.add('sel');}
+  document.getElementById(`msub-${actId}`).disabled = sel.size===0;
+}
+
+function subM(actId){
+  const act = A[S.idx];
+  const sel = S.ms['m'+actId];
+  const ok_set = new Set(act.ok);
+  document.querySelectorAll(`#mol-${actId} .ob`).forEach(b=>b.disabled=true);
+  document.getElementById(`msub-${actId}`).disabled=true;
+  let allOk = sel.size===ok_set.size;
+  if(allOk) for(let c of ok_set){if(!sel.has(c)){allOk=false;break;}}
+  act.opts.forEach((_,i)=>{
+    const b = document.getElementById(`mo-${actId}-${i}`);
+    if(!b) return;
+    const was=sel.has(i), should=ok_set.has(i);
+    if(was&&should) b.classList.add('ok');
+    else if(was&&!should) b.classList.add('ko');
+    else if(!was&&should) b.classList.add('show-ok');
+    else b.classList.remove('sel');
+  });
+  showFeedback(allOk, act.expl);
+  record(allOk);
+}
+
+// ═══════════════════════════════════════════════════
+// FEEDBACK
+// ═══════════════════════════════════════════════════
+function showFeedback(ok, expl){
+  document.getElementById('fi').textContent = ok?'✓':'✗';
+  document.getElementById('fi').className = `fi ${ok?'ok':'ko'}`;
+  document.getElementById('ft').textContent = ok?'Bonne réponse !':'Pas tout à fait…';
+  document.getElementById('ft').className = `ft ${ok?'ok':'ko'}`;
+  document.getElementById('fe').textContent = expl;
+  const isLast = S.idx >= A.length-1;
+  document.getElementById('btn-nx').textContent = isLast?'Voir mes résultats →':'Activité suivante →';
+  const fc = document.getElementById('fc');
+  fc.classList.add('vis');
+  setTimeout(()=>fc.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+}
+
+function record(ok){
+  if(ok) S.score++;
+  S.done.push(ok);
+  updatePB(); save();
+}
+
+// ═══════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════
+function nextAct(){
+  S.idx++;
+  if(S.idx >= A.length){ save(); showScreen('ss'); updateScore(); return; }
+  save(); renderAct(S.idx);
+}
+
+// ═══════════════════════════════════════════════════
+// SCORE SCREEN
+// ═══════════════════════════════════════════════════
+function updateScore(){
+  const p = Math.round((S.score/A.length)*100);
+  document.getElementById('sdisplay').textContent = `${S.score}/${A.length}`;
+  let title, sub;
+  if(p>=80){ title=`Excellent, ${S.firstName} !`; sub=`Vous maîtrisez bien les contenus du Bloc 3. Prêt·e pour l'examen !`; }
+  else if(p>=60){ title=`Bien joué, ${S.firstName} !`; sub=`De bonnes bases. Quelques points méritent encore votre attention.`; }
+  else { title=`Continuez, ${S.firstName} !`; sub=`Les fondamentaux sont là. Relisez vos notes sur les structures et les lois clés.`; }
+  document.getElementById('stitle').textContent = title;
+  document.getElementById('ssub').textContent = sub;
+}
+
+function restartQuiz(){
+  S = {firstName:S.firstName, idx:0, score:0, done:[], ms:{}};
+  save();
+  document.getElementById('pname').textContent = S.firstName;
+  showScreen('sq'); updatePB(); renderAct(0);
+}
+
+// ═══════════════════════════════════════════════════
+// CERTIFICATE
+// ═══════════════════════════════════════════════════
+function showCert(){ showScreen('sc'); drawCert(); }
+
+function drawCert(){
+  const cv = document.getElementById('certCanvas');
+  const W=1200, H=850;
+  cv.width=W; cv.height=H;
+  const ctx=cv.getContext('2d');
+
+  // BG
+  const bg = ctx.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0,'#f0f4ff'); bg.addColorStop(1,'#e8f8f8');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+  // Outer border
+  ctx.strokeStyle='#1e3a5f'; ctx.lineWidth=12;
+  ctx.strokeRect(22,22,W-44,H-44);
+  // Inner border
+  ctx.strokeStyle='#0e9aa7'; ctx.lineWidth=3;
+  ctx.strokeRect(38,38,W-76,H-76);
+
+  // Header band
+  ctx.fillStyle='#1e3a5f'; ctx.fillRect(0,0,W,165);
+
+  // Header text
+  ctx.fillStyle='#fff'; ctx.textAlign='center';
+  ctx.font='bold 28px Arial';
+  ctx.fillText('FORMATION MONITEUR ÉDUCATEUR',W/2,68);
+  ctx.fillStyle='#90caf9'; ctx.font='21px Arial';
+  ctx.fillText('Certification Bloc 3 — Opérateurs du secteur social et médico-social',W/2,115);
+
+  // Gold bar
+  ctx.fillStyle='#f9a825'; ctx.fillRect(80,155,W-160,8);
+
+  // Title
+  ctx.fillStyle='#1e3a5f'; ctx.font='bold 50px Arial';
+  ctx.fillText('CERTIFICAT DE RÉALISATION',W/2,258);
+
+  // Dots decoration
+  [[W/2,'#0e9aa7',5],[W/2-26,'#f9a825',4],[W/2+26,'#f9a825',4]].forEach(([x,c,r])=>{
+    ctx.fillStyle=c; ctx.beginPath(); ctx.arc(x,288,r,0,Math.PI*2); ctx.fill();
+  });
+
+  // Préambule
+  ctx.fillStyle='#37474f'; ctx.font='26px Arial';
+  ctx.fillText('Ce certificat atteste que',W/2,368);
+
+  // Name
+  ctx.fillStyle='#1e3a5f'; ctx.font='bold 62px Arial';
+  ctx.fillText(S.firstName,W/2,458);
+  const nw = ctx.measureText(S.firstName).width;
+  ctx.strokeStyle='#f9a825'; ctx.lineWidth=4;
+  ctx.beginPath(); ctx.moveTo(W/2-nw/2,474); ctx.lineTo(W/2+nw/2,474); ctx.stroke();
+
+  // Body
+  ctx.fillStyle='#37474f'; ctx.font='25px Arial';
+  ctx.fillText("a complété avec succès la capsule de révision interactive du",W/2,538);
+  ctx.fillStyle='#0e9aa7'; ctx.font='bold 29px Arial';
+  ctx.fillText('BLOC 3 — Formation Moniteur Éducateur',W/2,587);
+
+  // Score
+  const p = Math.round((S.score/A.length)*100);
+  ctx.fillStyle='#2e7d32'; ctx.font='bold 26px Arial';
+  ctx.fillText(`Score : ${S.score} / ${A.length} questions — ${p} %`,W/2,641);
+
+  // Date
+  const d = new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+  ctx.fillStyle='#607d8b'; ctx.font='22px Arial';
+  ctx.fillText(`Délivré le ${d}`,W/2,706);
+
+  // Footer line
+  ctx.strokeStyle='#1e3a5f'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(80,748); ctx.lineTo(W-80,748); ctx.stroke();
+  ctx.fillStyle='#90a4ae'; ctx.font='18px Arial';
+  ctx.fillText('Campus Social Formation — Révision interactive Bloc 3',W/2,788);
+
+  // Stars
+  star(ctx,108,498,5,38,16,'#f9a825');
+  star(ctx,W-108,498,5,38,16,'#f9a825');
+}
+
+function star(ctx,cx,cy,sp,or,ir,col){
+  let rot=Math.PI/2*3, step=Math.PI/sp;
+  ctx.beginPath(); ctx.moveTo(cx,cy-or);
+  for(let i=0;i<sp;i++){
+    ctx.lineTo(cx+Math.cos(rot)*or,cy+Math.sin(rot)*or); rot+=step;
+    ctx.lineTo(cx+Math.cos(rot)*ir,cy+Math.sin(rot)*ir); rot+=step;
+  }
+  ctx.closePath(); ctx.fillStyle=col; ctx.fill();
+}
+
+function dlCert(){
+  const cv=document.getElementById('certCanvas');
+  const a=document.createElement('a');
+  a.download=`certificat_bloc3_${S.firstName.toLowerCase().replace(/\s+/g,'_')}.png`;
+  a.href=cv.toDataURL('image/png'); a.click();
+}
+
+// ═══════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function save(){
+  try{ localStorage.setItem(SK,JSON.stringify({firstName:S.firstName,idx:S.idx,score:S.score,done:S.done})); }
+  catch(e){}
+}
+
+// ═══════════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{ init(); setupInput(); });
+</script>
+</body>
+</html>
